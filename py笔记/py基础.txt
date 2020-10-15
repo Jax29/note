@@ -1,0 +1,159 @@
+1.py的哲学：优雅；明确；简单（龟叔）
+2.1989年
+3.py的缺点：运行速度慢、代码不能加密
+4.py是跨平台的
+5.py解释器：CPython(c语言开发的）
+6.数据类型：
+	整数、浮点数、字符串（多行字符串"'   "')、布尔值（True/False）、空值None
+7.动态语言：变量本身类型不固定
+8.变量：变量名必须是大小写英文、数字和_的组合，且不能用数字开头
+9.常量：通常用全部大写的变量名表示常量（习惯而已，非要改是可以的）
+10.除法： 除法/ 是精确的，结果是浮点数
+	地板除// 结果会四舍五入取整
+	取余%
+11.字符编码：ASCII、Unicode和UTF-8
+12.对于单个字符的编码，Python提供了ord()函数获取字符的整数表示，chr()函数把编码转换为对应的字符
+13.编码：'中文'.encode('utf-8')
+     解码：b'ABC'.decode('ascii')
+14.    #!/usr/bin/env python3
+         # -*- coding: utf-8 -*-
+15.格式化： %
+    format()
+    f-string
+
+
+1.列表list： classmates = ['Michael', 'Bob', 'Tracy']
+	classmates[0]
+	>>> classmates[-1]
+	'Tracy'
+ 
+	 classmates.append('Adam')
+	classmates.insert(1, 'Jack')
+	classmates.pop()
+	 classmates.pop(1)
+2.元组tuple：tuple和list非常类似，但是tuple一旦初始化就不能修改
+	classmates = ('Michael', 'Bob', 'Tracy')
+	classmates[0]
+	因为tuple不可变，所以代码更安全。如果可能，能用tuple代替list就尽量用tuple
+	只有1个元素的tuple定义时必须加一个逗号,，来消除歧义：t = (1,)
+	t = ('a', 'b', ['A', 'B'])   ---》       ('a', 'b', ['X', 'Y'])    元组并没有改变，改变的只是列表元素（“指向不变”）
+3.条件判断：
+s = input('birth: ')
+birth = int(s)
+if <条件判断1>:
+    <执行1>
+elif <条件判断2>:
+    <执行2>
+elif <条件判断3>:
+    <执行3>
+else:
+    <执行4>
+4.循环：for...in... / while:
+	names = ['Michael', 'Bob', 'Tracy']
+	for name in names:
+    	      print(name)
+sum = 0
+n = 99
+while n > 0:
+    sum = sum + n
+    n = n - 2
+print(sum)
+5.break和continue
+
+
+
+1.dict和set:字典和集合
+	dict:使用键-值（key-value）存储，具有极快的查找速度
+	>>> d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
+	>>> d['Michael']
+	95
+	请务必注意，dict内部存放的顺序和key放入的顺序是没有关系的。
+	和list比较，dict有以下几个特点：
+
+	查找和插入的速度极快，不会随着key的增加而变慢；
+	需要占用大量的内存，内存浪费多。
+	而list相反：
+
+	查找和插入的时间随着元素的增加而增加；
+	占用空间小，浪费内存很少。
+	所以，dict是用空间来换取时间的一种方法。
+
+	需要牢记的第一条就是dict的key必须是不可变对象
+	在Python中，字符串、整数等都是不可变的，因此，可以放心地作为key。而list是可变的，就不能作为key
+
+	set:  set和dict类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在set中，没有重复的key
+	s = set([1, 2, 3])
+ 	s
+                 {1, 2, 3}  #显示的顺序也不表示set是有序的
+
+	通过add(key)方法可以添加元素到set中     
+	>>> s.add(4)  
+	通过remove(key)方法可以删除元素
+ 	>>> s.remove(4)
+ 
+	set可以看成数学意义上的无序和无重复元素的集合，因此，两个set可以做数学意义上的交集、并集等操作：
+	>>> s1 = set([1, 2, 3])
+	>>> s2 = set([2, 3, 4])
+	>>> s1 & s2
+	{2, 3}
+	>>> s1 | s2
+	{1, 2, 3, 4}
+
+	set和dict的唯一区别仅在于没有存储对应的value，但是，set的原理和dict一样，所以，同样不可以放入可变对象，
+   	因为无法判断两个可变对象是否相等，也就无法保证set内部“不会有重复元素”。
+2.再议不可变对象：
+	str是不变对象，而list是可变对象。
+	对于可变对象，比如list，对list进行操作，list内部的内容是会变化的
+	而对于不可变对象，比如str：
+>>> a = 'abc'
+>>> b = a.replace('a', 'A')
+>>> b
+'Abc'
+>>> a
+'abc'
+┌───┐                  ┌───────┐
+│ a │─────────────────>│ 'abc' │
+└───┘                  └───────┘
+┌───┐                  ┌───────┐
+│ b │─────────────────>│ 'Abc' │
+└───┘                  └───────┘
+所以，对于不变对象来说，调用对象自身的任意方法，也不会改变该对象自身的内容。
+相反，这些方法会创建新的对象并返回，这样，就保证了不可变对象本身永远是不可变的
+
+py文件执行过程：
+执行 python XX.py 后，将会启动 Python 的解释器
+python解释器的编译器会将.py源文件编译（解释）成字节码生成PyCodeObject字节码对象存放在内存中。
+python解释器的虚拟机将执行内存中的字节码对象转化为机器语言，虚拟机与操作系统交互，使机器语言在机器硬件上运行。
+运行结束后python解释器则将PyCodeObject写回到pyc文件中。当python程序第二次运行时，首先程序会在硬盘中寻找pyc文件，如果找到，则直接载入，否则就重复上面的过程。
+所以我们应该这样来定位PyCodeObject和pyc文件，我们说pyc文件其实是PyCodeObject的一种持久化保存方式。
+pyc文件，文件中包含python的magic number（来说明编译时使用的python版本号）、源文件的mtime（使pyc和py文件保持同步）、编译出的code对象
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

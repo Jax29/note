@@ -1,0 +1,64 @@
+1.错误处理：
+try:
+    print('try...')
+    r = 10 / 0
+    print('result:', r)
+except ZeroDivisionError as e:
+    print('except:', e)
+finally:
+    print('finally...')
+print('END')
+	调用栈；
+	记录错误：import logging
+	except Exception as e:
+    	    logging.exception(e)
+	抛出错误；
+2.调试：
+	第一种方法简单直接粗暴有效，就是用print()把可能有问题的变量打印出来看看。
+	用print()最大的坏处是将来还得删掉它，想想程序里到处都是print()，运行结果也会包含很多垃圾信息。
+
+	第二种方法：断言
+	如果断言失败，assert语句本身就会抛出AssertionError：
+	程序中如果到处充斥着assert，和print()相比也好不到哪去。不过，启动Python解释器时可以用-O参数来关闭assert：
+	$ python -O err.py。
+	关闭后，你可以把所有的assert语句当成pass来看。
+
+	第三种方法：logging 
+	允许你指定记录信息的级别，有debug，info，warning，error等几个级别，当我们指定level=INFO时，logging.debug就不起作用了。同理，
+	指定level=WARNING后，debug和info就不起作用了。这样一来，你可以放心地输出不同级别的信息，也不用删除，最后统一控制输出哪个级别的信息。
+	logging的另一个好处是通过简单的配置，一条语句可以同时输出到不同的地方，比如console和文件。
+
+	第四种方法：python调试器pdb:
+	$ python -m pdb err.py
+
+	pdb.set_trace()
+	这个方法也是用pdb，但是不需要单步执行，我们只需要import pdb，然后，在可能出错的地方放一个pdb.set_trace()，
+	就可以设置一个断点。
+	(Pdb) p n
+	(Pdb) c
+3.单元测试：
+	可以在单元测试中编写两个特殊的setUp()和tearDown()方法。这两个方法会分别在每调用一个测试方法的前后分别被执行。
+	class TestDict(unittest.TestCase):
+
+   	 def setUp(self):
+    	    print('setUp...')
+
+  	  def tearDown(self):
+    	    print('tearDown...')
+4.文档测试：
+	if __name__=='__main__':
+    	  import doctest
+  	  doctest.testmod()
+	doctest非常有用，不但可以用来测试，还可以直接作为示例代码。通过某些文档生成工具，就可以自动把包含doctest的注释提取出来。
+	用户看文档的时候，同时也看到了doctest。
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,12 @@
+vscode快捷键：
+	1.文件头部添加注释：Ctrl+alt+i,Ctrl+alt+t
+	2.复制粘贴整行：光标不选中时：Ctrl+c , Ctrl+v
+	3.剪贴：(同上）Ctrl+x
+	4.查找：Ctrl+f(换下一行：1.光标在查找区：按回车. 2.光标在编辑器：按F3)
+	5.替换：Ctrl+h(一个个替换/全部替换)
+	6.行注释：Ctrl+/    (再按一次取消)
+	7.块注释：shift+alt+a   (再按一次取消)
+	8.下方插入一行：Ctrl+enter ; 上方插入一行：Ctrl+shift+enter
+	9.格式化代码：alt+shift+f
+	10.文件夹查找：Ctrl+shift+f(光标在侧栏)
+	11.html与css关联：ctrl+鼠标左键单击完成跳转.

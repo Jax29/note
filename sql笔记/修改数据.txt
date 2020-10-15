@@ -1,0 +1,18 @@
+修改数据：
+	关系数据库的基本操作就是增删改查，即CRUD：Create、Retrieve、Update、Delete。
+	而对于增、删、改，对应的SQL语句分别是：
+	INSERT：插入新记录；
+	UPDATE：更新已有记录；
+	DELETE：删除已有记录。
+
+1.INSERT:
+ 	INSERT INTO <表名> (字段1, 字段2, ...) VALUES (值1, 值2, ...);
+	INSERT INTO students (class_id, name, gender, score) VALUES (2, '大牛', 'M', 80);
+	还可以一次性添加多条记录，只需要在VALUES子句中指定多个记录值，每个记录是由(...)包含的一组值。
+2.UPDATE:
+	UPDATE <表名> SET 字段1=值1, 字段2=值2, ... WHERE ...;
+	UPDATE students SET name='大牛', score=66 WHERE id=1;
+	UPDATE students SET score=score+10 WHERE score<80;
+3.DELETE:
+	DELETE FROM students WHERE id=1;
+	DELETE FROM students WHERE id>=5 AND id<=7;

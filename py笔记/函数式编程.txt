@@ -1,0 +1,88 @@
+1.函数式编程：
+	函数式编程就是一种抽象程度很高的编程范式，纯粹的函数式编程语言编写的函数没有变量，因此，任意一个函数，
+       	只要输入是确定的，输出就是确定的，这种纯函数我们称之为没有副作用。
+	函数式编程的一个特点就是，允许把函数本身作为参数传入另一个函数，还允许返回一个函数
+	Python对函数式编程提供部分支持。由于Python允许使用变量，因此，Python不是纯函数式编程语言。
+2.高阶函数：Higher-order function
+	把函数作为参数传入，这样的函数称为高阶函数，函数式编程就是指这种高度抽象的编程范式。
+
+      	map()和reduce()函数：
+	map()函数接收两个参数，一个是函数，一个是Iterable，map将传入的函数依次作用到序列的每个元素，并把结果作为新的Iterator返回
+	>>> def f(x):
+	...     return x * x
+	>>> r = map(f, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+	>>> list(r)
+	[1, 4, 9, 16, 25, 36, 49, 64, 81]
+	reduce把一个函数作用在一个序列[x1, x2, x3, ...]上，这个函数必须接收两个参数，reduce把结果继续和序列的下一个元素做累积计算，
+	其效果就是：
+	reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)
+
+	filter()函数用于过滤序列：
+	和map()类似，filter()也接收一个函数和一个序列。和map()不同的是，filter()把传入的函数依次作用于每个元素，
+ 	然后根据返回值是True还是False决定保留还是丢弃该元素。
+	filter()的作用是从一个序列中筛出符合条件的元素。由于filter()使用了惰性计算，所以只有在取filter()结果的时候，
+	才会真正筛选并每次返回下一个筛出的元素。
+
+	排序算法：
+	sorted()也是一个高阶函数。用sorted()排序的关键在于实现一个映射函数
+	sorted(['bob', 'about', 'Zoo', 'Credit'], key=str.lower, reverse=True
+3.返回函数：函数作为返回值
+	闭包：
+	返回闭包时牢记一点：返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+4.匿名函数：关键字lambda表示匿名函数，冒号前面的x表示函数参数。
+	匿名函数有个限制，就是只能有一个表达式，不用写return，返回值就是该表达式的结果。
+	lambda x: x * x
+
+	同样，也可以把匿名函数作为返回值返回，比如：
+	def build(x, y):
+    	      return lambda: x * x + y * y
+5.装饰器：在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）。
+	函数对象有一个__name__属性，可以拿到函数的名字
+ 
+	import functools
+
+	@log
+	def now():
+  	  print('2015-3-25')
+
+	def log(func):
+ 	   @functools.wraps(func)       #使函数的_name_属性经过装饰器后不改变
+   	 def wrapper(*args, **kw):
+       	 print('call %s():' % func.__name__)
+       	 return func(*args, **kw)
+    	return wrapper
+
+	把@log放到now()函数的定义处，相当于执行了语句：
+	now = log(now)
+
+ 	带参数的decorator：
+	def log(text):
+  	  def decorator(func):
+	    @functools.wraps(func)
+    	    def wrapper(*args, **kw):
+        	    print('%s %s():' % (text, func.__name__))
+         	   return func(*args, **kw)
+        	return wrapper
+    	return decorator
+	这个3层嵌套的decorator用法如下：
+
+	@log('execute')
+	def now():
+   	 print('2015-3-25')
+6.偏函数：
+	简单总结functools.partial的作用就是，把一个函数的某些参数给固定住（也就是设置默认值），
+            返回一个新的函数，调用这个新函数会更简单。
+	>>> import functools
+	>>> int2 = functools.partial(int, base=2)
+
+
+
+
+
+
+
+
+
+
+
+

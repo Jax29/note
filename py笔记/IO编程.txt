@@ -1,0 +1,100 @@
+IO编程：
+	同步IO、异步IO
+1.文件读写:
+	在磁盘上读写文件的功能都是由操作系统提供的，现代操作系统不允许普通的程序直接操作磁盘，所以，读写文件就是请求
+	操作系统打开一个文件对象（通常称为文件描述符），然后，通过操作系统提供的接口从这个文件对象中读取数据（读文件），
+	或者把数据写入这个文件对象（写文件）。
+
+ 	读文件：
+	f = open('/Users/michael/test.txt', 'r')
+	如果文件打开成功，接下来，调用read()方法可以一次读取文件的全部内容，Python把内容读到内存，用一个str对象表示。
+	f.read()
+	最后一步是调用close()方法关闭文件：
+	f.close()
+
+ 	Python引入了with语句来自动帮我们调用close()方法：
+	with open('/path/to/file', 'r') as f:
+   	  print(f.read())
+	另外，调用readline()可以每次读取一行内容，调用readlines()一次读取所有内容并按行返回list。
+
+
+	二进制文件：用'rb'模式打开文件
+	字符编码：需要给open()函数传入encoding参数：encoding='gbk'
+	open()函数还接收一个errors参数，表示如果遇到编码错误后如何处理。最简单的方式是直接忽略：errors='ignore'
+
+	写文件：
+	with open('/Users/michael/test.txt', 'w') as f:
+    	  f.write('Hello, world!')
+	以'w'模式写入文件时，如果文件已存在，会直接覆盖。所以可以传入'a'以追加（append）模式写入。
+2.StringIO:在内存中读写str
+>> from io import StringIO
+>>> f = StringIO('Hello!\nHi!\nGoodbye!')
+>>> while True:
+...     s = f.readline()
+...     if s == '':
+...         break
+...     print(s.strip())
+...
+Hello!
+Hi!
+Goodbye!
+3.BytesIO:StringIO操作的只能是str，如果要操作二进制数据，就需要使用BytesIO。
+>>> from io import BytesIO
+>>> f = BytesIO(b'\xe4\xb8\xad\xe6\x96\x87')
+>>> f.read()
+b'\xe4\xb8\xad\xe6\x96\x87'
+ 
+4.操作文件和目录：
+	Python内置的os模块也可以直接调用操作系统提供的接口函数。
+	操作文件和目录的函数一部分放在os模块中，一部分放在os.path模块中
+5.序列化：pickling
+	把变量从内存中变成可存储或传输的过程称之为序列化，反过来，把变量内容从序列化的对象重
+	新读到内存里称之为反序列化，即unpickling。
+	Python提供了pickle模块来实现序列化：
+	>>> import pickle
+  	>>> d = dict(name='Bob', age=20, score=88)
+	>>> pickle.dumps(d)
+	b'\x80\x03}q\x00(X\x03\x00\x00\x00ageq\x01K\x14X\x05\x00\x00\x00scoreq\x02KXX\x04\x00\x00\x00nameq\x03X\x03\x00\x00\x00Bobq\x04u.'
+
+ 	JSON:如果我们要在不同的编程语言之间传递对象，就必须把对象序列化为标准格式。
+	比如XML，更好的方法是序列化为JSON，因为JSON表示出来就是一个字符串，可以被所有语言读取，也可以方便地存储到磁盘或者通过
+	网络传输。JSON不仅是标准格式，并且比XML更快，而且可以直接在Web页面中读取，非常方便。
+
+	>>> import json
+	>>> d = dict(name='Bob', age=20, score=88)
+	>>> json.dumps(d)
+	'{"age": 20, "score": 88, "name": "Bob"}'
+
+	JSON反序列化为python对象：
+	>>> json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+	>>> json.loads(json_str)
+	{'age': 20, 'score': 88, 'name': 'Bob'}
+
+	JSON的进阶：
+	类的对象不是一个可序列化为JSON的对象。
+	dump()方法可选参数default可以把任意一个对象变成一个可序列的JSON对象，
+	我们只需要为Student专门写一个转换函数，再把函数传进去即可：
+	def student2dict(std):
+   	  return {
+   	     'name': std.name,
+   	     'age': std.age,
+    	    'score': std.score
+   	 }
+	这样，Student实例首先被student2dict()函数转换成dict，然后再被顺利序列化为JSON：
+	>>> print(json.dumps(s, default=student2dict))
+	{"age": 20, "name": "Bob", "score": 88}
+	不过，下次如果遇到一个Teacher类的实例，照样无法序列化为JSON。我们可以偷个懒，把任意class的实例变为dict：
+	print(json.dumps(s, default=lambda obj: obj.__dict__))
+	因为通常class的实例都有一个__dict__属性，它就是一个dict，用来存储实例变量。也有少数例外，比如定义了__slots__的class。
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,141 @@
+面向对象高级编程：
+1.使用__solts__:
+	Python允许在定义class的时候，定义一个特殊的__slots__变量，来限制该class实例能添加的属性：
+	class Student(object):
+	    __slots__ = ('name', 'age') # 用tuple定义允许绑定的属性名称
+	使用__slots__要注意，__slots__定义的属性仅对当前类实例起作用，对继承的子类是不起作用的
+2.使用@property:
+	Python内置的@property装饰器就是负责把一个方法变成属性调用的。
+
+	class Student(object):
+
+    	@property
+  	  def birth(self):
+     	   return self._birth
+
+   	 @birth.setter
+    	def birth(self, value):
+     	  self._birth = value
+
+   	@property
+   	 def age(self):
+      	  return 2015 - self._birth
+	还可以定义只读属性，只定义getter方法，不定义setter方法就是一个只读属性，age就是一个只读属性。
+3.多重继承：
+	class Dog(Mammal, RunnableMixIn, CarnivorousMixIn):
+    		pass	
+	MixIn的目的就是给一个类增加多个功能，这样，在设计类的时候，我们优先考虑通过多重继承来组合
+	多个MixIn的功能，而不是设计多层次的复杂的继承关系。
+4.定制类：
+	__str__:
+	先定义一个Student类，打印一个实例：
+	>>> class Student(object):
+	...     def __init__(self, name):
+	...         self.name = name
+	...
+	>>> print(Student('Michael'))
+	<__main__.Student object at 0x109afb190>
+	打印出来的结果并不好看，只需要定义好__str__()方法，就可以返回一个好看的字符串。
+	def __str__(self):
+	...         return 'Student object (name: %s)' % self.name
+	直接敲变量不用print，打印出来的实例还是不好看:
+	这是因为直接显示变量调用的不是__str__()，而是__repr__()，两者的区别是__str__()返回用户看到的字符串，
+	而__repr__()返回程序开发者看到的字符串，也就是说，__repr__()是为调试服务的。
+	解决办法是再定义一个__repr__():        __repr__ = __str__
+
+	__iter__:
+	如果一个类想被用于for ... in循环，类似list或tuple那样，就必须实现一个__iter__()方法，该方法返回一个迭代对象，然后，
+	Python的for循环就会不断调用该迭代对象的__next__()方法拿到循环的下一个值，直到遇到StopIteration错误时退出循环。
+	class Fib(object):
+  	  def __init__(self):
+      	  self.a, self.b = 0, 1 # 初始化两个计数器a，b
+
+ 	   def __iter__(self):
+    	    return self # 实例本身就是迭代对象，故返回自己
+
+ 	   def __next__(self):
+    	    self.a, self.b = self.b, self.a + self.b # 计算下一个值
+       	    if self.a > 100000: # 退出循环的条件
+       	     raise StopIteration()
+ 	       return self.a # 返回下一个值
+
+	>>> for n in Fib():
+	...     print(n)
+
+	__getitem__:要表现得像list那样按照下标取出元素，需要实现__getitem__()方法.
+
+	__getattar__:
+	正常情况下，当我们调用类的方法或属性时，如果不存在，就会报错。
+	要避免这个错误，除了可以加上一个score属性外，Python还有另一个机制，那就是写一个__getattr__()方法，动态返回一个属性。
+	def __getattr__(self, attr):
+       	 if attr=='score':
+    	        return 99	
+
+	__call__:
+	任何类，只需要定义一个__call__()方法，就可以直接对实例进行调用。请看示例：
+	class Student(object):
+   	 def __init__(self, name):
+   	     self.name = name
+
+    	 def __call__(self):
+        	   print('My name is %s.' % self.name)
+	调用方式如下：
+	>>> s = Student('Michael')
+	>>> s() # self参数不要传入
+	My name is Michael.
+5.使用枚举类：
+from enum import Enum, unique
+
+@unique
+class Weekday(Enum):
+    Sun = 0 # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+@unique装饰器可以帮助我们检查保证没有重复值。
+  
+6.使用元类：
+	type()函数既可以返回一个对象的类型，又可以创建出新的类型：
+	>>> def fn(self, name='world'): # 先定义函数
+	...     print('Hello, %s.' % name)
+	...
+	>>> Hello = type('Hello', (object,), dict(hello=fn)) # 创建Hello class
+
+	要创建一个class对象，type()函数依次传入3个参数：
+	(1)class的名称；
+	(2)继承的父类集合，注意Python支持多重继承，如果只有一个父类，别忘了tuple的单元素写法；
+	(3)class的方法名称与函数绑定，这里我们把函数fn绑定到方法名hello上。
+
+	metaclass:
+	除了使用type()动态创建类以外，要控制类的创建行为，还可以使用metaclass。
+	先定义metaclass，就可以创建类，最后创建实例。
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
